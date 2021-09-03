@@ -11,12 +11,12 @@ from ApiPressure import ApiPressure
 
 if __name__ == '__main__':
 
-    for i in range(1):
-        print(f' fro {i} -----------------------')
-        apiPressure = ApiPressure()
-        apiPressure.check_request_config()
-        createThread = CreateThread(apiPressure)
-        createThread.thread_main()
+    # for i in range(1):
+    # print(f' fro {i} -----------------------')
+    apiPressure = ApiPressure()
+    apiPressure.check_request_config()
+    createThread = CreateThread(apiPressure)
+    createThread.thread_main()
 
 
 

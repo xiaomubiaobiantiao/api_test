@@ -44,12 +44,12 @@ class ApiPressure:
 
     # 设置 check_request 接口访问的配置值
     def check_request_config(self):
-    
+
         self.method = "post"
         self.url = "http://118.193.47.247:8007/api/meeting/check_request"
         self.data = b'{"id": "149","request_type": "1","data_num": "3"}'
-        self.thread_num = 1
-        self.one_work_num = 1
+        self.thread_num = 10
+        self.one_work_num = 10
         self.loop_sleep = 0
         self.response_time = []
         self.error = []

@@ -67,7 +67,7 @@ class CreateThread:
 
 
     # 接口函数
-    async def thread_api(self):
+    def thread_api(self):
         global results
         try:
             if self.method == "post":
@@ -80,13 +80,13 @@ class CreateThread:
 
 
     # 获取响应时间 单位ms
-    async def thread_response(self):
-        responsetime = float(await self.thread_api().elapsed.microseconds) / 1000
+    def thread_response(self):
+        responsetime = float(self.thread_api().elapsed.microseconds) / 1000
         return responsetime
     
  
     # 获取平均相应时间 单位ms
-    async def thread_response_avg(self):
+    def thread_response_avg(self):
         avg = 0.000
         l = len(self.response_time)
         for num in self.response_time:
@@ -95,18 +95,18 @@ class CreateThread:
     
 
     # 获取当前时间格式
-    async def thread_time(self):
+    def thread_time(self):
         return time.asctime(time.localtime(time.time()))
 
 
     # 获取错误的返回状态码
-    async def thread_error(self):
+    def thread_error(self):
         try:
 
             if self.thread_api().status_code == 200:
                 info_result = eval(self.thread_api().text)
 
-                result = await self.apiObject.check_request(info_result)
+                result = self.apiObject.check_request(info_result)
                 if len(result) != 0:
                     self.error_info_list.append(result)
                 # 查看返回 code 是否成功
@@ -132,25 +132,25 @@ class CreateThread:
 
 
     # 工作线程循环
-    async def thread_work(self):
-        threadname = await threading.currentThread().getName()
+    def thread_work(self):
+        threadname = threading.currentThread().getName()
         print ("[", threadname, "] Sub Thread Begin")
         for i in range(self.one_work_num):
-            await self.thread_api()
-            print ("接口请求时间： ", await self.thread_time())
-            self.response_time.append(await self.thread_response())
-            await self.thread_error()
+            self.thread_api()
+            print ("接口请求时间： ", self.thread_time())
+            self.response_time.append(self.thread_response())
+            self.thread_error()
             # sleep(loop_sleep)
         print ("[", threadname, "] Sub Thread End")
     
 
-    async def thread_main(self):
+    def thread_main(self):
         start = time.time()
         threads = []
 
         # 启动所有线程
         for i in range(self.thread_num):
-            t = await threading.Thread(target=await self.thread_work())
+            t = threading.Thread(target=self.thread_work())
             t.setDaemon(True)
             threads.append(t)
         for t in threads:
@@ -176,6 +176,6 @@ class CreateThread:
         print ("总耗时（秒）：", end - start)
         print ("每次请求耗时（秒）：", (end - start) / (self.thread_num * self.one_work_num))
         print ("每秒承载请求数（TPS)：", (self.thread_num * self.one_work_num) / (end - start))
-        print ("平均响应时间（毫秒）：", await self.thread_response_avg())
+        print ("平均响应时间（毫秒）：", self.thread_response_avg())
         print ("打印错误列表", self.error_info_list)
 
